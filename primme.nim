@@ -33,8 +33,9 @@ proc primme*(evals: var openarray[cdouble]; evecs: var openarray[complex[cdouble
 proc primme_initialize*:primme_params =
   result.addr.primme_initialize
   result
-proc set_method*(params: var primme_params; preset_method: primme_preset_method): cint =
-  primme_set_method(preset_method, params.addr)
+proc set_method*(params: var primme_params; preset_method: primme_preset_method): int =
+  primme_set_method(preset_method, params.addr).int
+template display_params*(params: primme_params) = params.primme_display_params
 proc free*(param: var primme_params) = param.addr.primme_free
 
 template asarray*[T](p:pointer):auto =
@@ -46,7 +47,7 @@ export primme_eigs, primme_svds
 when isMainModule:
   import strutils
   proc laplacianMatVec[T](x:pointer, ldx:ptr PRIMME_INT, y:pointer, ldy:ptr PRIMME_INT, blocksize:ptr cint,
-                          primme:ptr primme_params, err:ptr cint) {.noconv.} =
+                          params:ptr primme_params, err:ptr cint) {.noconv.} =
     let
       x = asarray[T] x
       dx = ldx[]
@@ -56,16 +57,16 @@ when isMainModule:
       let
         idx = i*dx
         idy = i*dy
-      for row in 0..<primme.n:
+      for row in 0..<params.n:
         let
           nx = row + idx
           ny = row + idy
         y[ny] = 2*x[nx]
         if row>0: y[ny] += -x[nx-1]
-        if row+1<primme.n: y[ny] += -x[nx+1]
+        if row+1<params.n: y[ny] += -x[nx+1]
     err[] = 0
   proc laplacianPrecond[T](x:pointer, ldx:ptr PRIMME_INT, y:pointer, ldy:ptr PRIMME_INT, blocksize:ptr cint,
-                           primme:ptr primme_params, err:ptr cint) {.noconv.} =
+                           params:ptr primme_params, err:ptr cint) {.noconv.} =
     let
       x = asarray[T] x
       dx = ldx[]
@@ -75,7 +76,7 @@ when isMainModule:
       let
         idx = i*dx
         idy = i*dy
-      for row in 0..<primme.n:
+      for row in 0..<params.n:
         y[row + idx] = x[row + idy]/2.0
     err[] = 0
   var param = primme_initialize() # Set default values in primme
@@ -90,14 +91,17 @@ when isMainModule:
   # param.minRestartSize = 4                # Optional
   # param.maxBlockSize = 1                  # Optional
   # param.maxMatvecs = 1000                 # Optional
-  discard param.set_method PRIMME_DYNAMIC # Method to solve the problem
-  # discard param.primme_set_method PRIMME_DEFAULT_MIN_TIME # Method to solve the problem
-  param.primme_display_params              # Optional display PRIMME configuration struct
+  # var ret = param.primme_set_method PRIMME_DEFAULT_MIN_TIME # Method to solve the problem
+  var ret = param.set_method PRIMME_DYNAMIC
+  if 0 != ret: # Method to solve the problem
+    echo "Error: set_method returned with nonzero exit status: ", ret
+    quit QuitFailure
+  param.display_params              # Optional display PRIMME configuration struct
   var
     evals = newseq[float](param.numEvals)
     evecs = newseq[float](param.n * param.numEvals)
     rnorms = newseq[float](param.numEvals)
-    ret = primme(evals, evecs, rnorms, param)
+  ret = primme(evals, evecs, rnorms, param)
   if ret != 0:
     echo "Error: primme returned with nonzero exit status: ", ret
     quit QuitFailure
