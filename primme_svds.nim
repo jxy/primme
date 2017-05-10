@@ -58,7 +58,7 @@ type
     timeOrtho* {.importc: "timeOrtho".}: cdouble ##  time expend by ortho
     timeGlobalSum* {.importc: "timeGlobalSum".}: cdouble ##  time expend by globalSumReal
 
-  primme_svds_params* {.importc: "primme_svds_params", header: "primme.h".} = object
+  primme_svds_params* {.bycopy, importc: "primme_svds_params", header: "primme.h".} = object
     primme* {.importc: "primme".}: primme_params ## *** Low interface: configuration for the eigensolver
     ##  Keep it as first field to access primme_svds_params from
     ##                              primme_params
@@ -69,10 +69,10 @@ type
                                 ## **** High interface: these values are transferred to primme and primmeStage2 properly
     matrixMatvec* {.importc: "matrixMatvec".}: proc (x: pointer; ldx: ptr PRIMME_INT;
         y: pointer; ldy: ptr PRIMME_INT; blockSize: ptr cint; transpose: ptr cint;
-        primme_svds: ptr primme_svds_params; ierr: ptr cint)
+        primme_svds: ptr primme_svds_params; ierr: ptr cint) {.noconv.}
     applyPreconditioner* {.importc: "applyPreconditioner".}: proc (x: pointer;
         ldx: ptr PRIMME_INT; y: pointer; ldy: ptr PRIMME_INT; blockSize: ptr cint;
-        transpose: ptr cint; primme_svds: ptr primme_svds_params; ierr: ptr cint) ##  Input for the following is only required for parallel programs
+        transpose: ptr cint; primme_svds: ptr primme_svds_params; ierr: ptr cint) {.noconv.} ##  Input for the following is only required for parallel programs
     numProcs* {.importc: "numProcs".}: cint
     procID* {.importc: "procID".}: cint
     mLocal* {.importc: "mLocal".}: PRIMME_INT
@@ -80,7 +80,7 @@ type
     commInfo* {.importc: "commInfo".}: pointer
     globalSumReal* {.importc: "globalSumReal".}: proc (sendBuf: pointer;
         recvBuf: pointer; count: ptr cint; primme_svds: ptr primme_svds_params;
-        ierr: ptr cint)         ##  Though primme_svds_initialize will assign defaults, most users will set these
+        ierr: ptr cint) {.noconv.} ##  Though primme_svds_initialize will assign defaults, most users will set these
     numSvals* {.importc: "numSvals".}: cint
     target* {.importc: "target".}: primme_svds_target
     numTargetShifts* {.importc: "numTargetShifts".}: cint ##  For primme_svds_augmented method, user has to
@@ -112,7 +112,7 @@ type
         basisNorms: pointer; numConverged: ptr cint; lockedSvals: pointer;
         numLocked: ptr cint; lockedFlags: ptr cint; lockedNorms: pointer;
         inner_its: ptr cint; LSRes: pointer; event: ptr primme_event; stage: ptr cint;
-        primme_svds: ptr primme_svds_params; err: ptr cint)
+        primme_svds: ptr primme_svds_params; err: ptr cint) {.noconv.}
     monitor* {.importc: "monitor".}: pointer
 
   primme_svds_params_label* {.size: sizeof(cint).} = enum
