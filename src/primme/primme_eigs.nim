@@ -1,4 +1,5 @@
 ## ******************************************************************************
+##  Copyright (c) 2017, Xiao-Yong Jin
 ##  Copyright (c) 2017, College of William & Mary
 ##  All rights reserved.
 ##

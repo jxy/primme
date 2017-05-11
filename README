@@ -1,0 +1,141 @@
+NAME
+     Nim interface for PRIMME: PReconditioned Iterative MultiMethod Eigensolver
+
+DESCRIPTION
+     This is a Nim interface for PRIMME.  "PRIMME, pronounced as
+     prime, computes a few eigenvalues and their corresponding
+     eigenvectors of a real symmetric or complex Hermitian
+     matrix.  It can also compute singular values and vectors of
+     a square or rectangular matrix.  It can find largest,
+     smallest, or interior singular/eigenvalues and can use
+     preconditioning to accelerate convergence.  It is especially
+     optimized for large, difficult problems, and can be a useful
+     tool for both non-experts and experts."
+
+     The Nim interfrace tries to stick to the C interface while
+     using Nim's capabilities to make our life easier.  Some
+     familiarity with the C interface is recommended in using the
+     Nim interface.
+
+     There are three types corresponding the C interface,
+
+       PRIMME_INT
+       PRIMME_COMPLEX_FLOAT
+       PRIMME_COMPLEX_DOUBLE
+
+     They are `int64', `complex[cfloat]', and `complex[cdouble]'
+     respectively.
+
+     The main driver is a set of procedures all named `run'.
+
+       run(primme, vals, vecs, resNorms)
+
+     where `primme' is either `primme_params' or
+     `primme_svds_params', `vals' and `resNorms' holds the eigen
+     (singular) values and their residual norms respectively, and
+     `vecs' holds the eigen (singular) vectors.
+
+     The default parameters object `primme_params' and
+     `primme_svds_params' can be obtained from
+     `primme_initialize' and `primme_svds_initialize'
+     respectively.  Method can be given by calling `set_method'
+     with the parameters object and supplying
+     `primme_preset_method' and/or `primme_svds_preset_method'.
+     The parameters can be displayed with `display_params', and
+     freed with `free'.
+
+     A helper template `asarray[T](p:pointer)' can be used to
+     simplify interfacing with C libraries that give us pointers.
+
+       asarray[T](p)
+
+     converts any pointer to type `ptr array[0..0,T]'.
+
+     A custom `complex[T]' is defined for `PRIMME_COMPLEX_FLOAT'
+     and `PRIMME_COMPLEX_DOUBLE' as `complex[cfloat]' and
+     `complex[cdouble]' respectively.
+
+     In addition to the above described interface, the Nim module
+     also exposes all C library types, enums, and functions,
+     declared via the header file, `primme.h'.
+
+SYNPOSIS
+     type PRIMME_INT
+     type PRIMME_COMPLEX_FLOAT
+     type PRIMME_COMPLEX_DOUBLE
+     proc run*(primme: var primme_params;
+               evals: var openarray[cfloat];
+	       evecs: var openarray[cfloat];
+               resNorms: var openarray[cfloat]): int
+     proc run*(primme: var primme_params;
+               evals: var openarray[cfloat];
+	       evecs: var openarray[complex[cfloat]];
+               resNorms: var openarray[cfloat]): int
+     proc run*(primme: var primme_params;
+               evals: var openarray[cdouble];
+	       evecs: var openarray[cdouble];
+               resNorms: var openarray[cdouble]): int
+     proc run*(primme: var primme_params;
+               evals: var openarray[cdouble];
+	       evecs: var openarray[complex[cdouble]];
+               resNorms: var openarray[cdouble]): int
+     proc run*(primme: var primme_svds_params;
+               svals: var openarray[cfloat];
+	       svecs: var openarray[cfloat];
+               resNorms: var openarray[cfloat]): int
+     proc run*(primme: var primme_svds_params;
+               svals: var openarray[cfloat];
+	       svecs: var openarray[complex[cfloat]];
+               resNorms: var openarray[cfloat]): int
+     proc run*(primme: var primme_svds_params;
+               svals: var openarray[cdouble];
+	       svecs: var openarray[cdouble];
+               resNorms: var openarray[cdouble]): int
+     proc run*(primme: var primme_svds_params;
+               svals: var openarray[cdouble];
+	       svecs: var openarray[complex[cdouble]];
+               resNorms: var openarray[cdouble]): int
+     proc primme_initialize*:primme_params
+     proc primme_svds_initialize*:primme_svds_params
+     proc set_method*(primme: var primme_params;
+                      preset_method: primme_preset_method): int
+     proc set_method*(primme: var primme_svds_params;
+                      preset_method: primme_svds_preset_method;
+                      methodStage1: primme_preset_method;
+		      methodStage2: primme_preset_method): int
+     template display_params*(primme: primme_params)
+     template display_params*(primme: primme_svds_params)
+     proc free*(primme: var primme_params)
+     proc free*(primme: var primme_svds_params)
+     template asarray*[T](p:pointer):auto
+
+BUILDING
+     To compile and link against PRIMME library, Nim needs to
+     know its location and any extra libraries required.  The
+     default flags in `primme.nim'
+
+       const
+         primmeDir {.strdefine.} = "/usr"
+         primmeLib {.strdefine.} = primmeDir&"/lib/libprimme.a"
+         lapackLib {.strdefine.} = "/usr/lib/libopenblas.a -lm -lgfortran"
+       {.passC: "-I"&primmeDir&"/include".}
+       {.passL: primmeLib&" "&lapackLib.}
+
+     are unsuitable for every situation.  You can pass custom
+     flags to the Nim compiler when compiling your application
+     with
+
+       nim c -d:primmeDir=$HOME/pkg/primme \
+             -d:lapackLib="-llapack -lblas -lm" \
+	     YourApp.nim
+
+EXAMPLES
+     See files under the directory, `test'.
+
+LICENSE
+     This work is licensed under the MIT license.  See file
+     LICENSE for details.
+
+SEE ALSO
+     PRIMME: PReconditioned Iterative MultiMethod Eigensolver
+             https://github.com/primme/primme
