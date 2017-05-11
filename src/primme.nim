@@ -1,4 +1,4 @@
-##  Nim wrapper for PRIMME.
+##  Nim interface for PRIMME.
 ##
 ##  The C library can be found at https://github.com/primme/primme
 

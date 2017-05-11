@@ -1,6 +1,6 @@
 version     = "0.0.0"
 author      = "Xiao-Yong Jin"
-description = "Wrapper for PRIMME: PReconditioned Iterative MultiMethod Eigensolver"
+description = "Nim interface for PRIMME: PReconditioned Iterative MultiMethod Eigensolver"
 license     = "MIT"
 srcDir      = "src"
 
