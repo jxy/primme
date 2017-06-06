@@ -108,6 +108,10 @@ type
     printLevel* {.importc: "printLevel".}: cint
     outputFile* {.importc: "outputFile".}: ptr FILE
     stats* {.importc: "stats".}: primme_svds_stats
+    convTestFun* {.importc: "convTestFun".}: proc (sval: ptr cdouble;
+        leftsvec: pointer; rightsvec: pointer; rNorm: cdouble; isconv: ptr cint;
+        primme: ptr primme_svds_params; ierr: cint) {.noconv.}
+    convtest* {.importc: "convtest".}: pointer
     monitorFun* {.importc: "monitorFun".}: proc (basisSvals: pointer;
         basisSize: ptr cint; basisFlags: ptr cint; iblock: ptr cint; blockSize: ptr cint;
         basisNorms: pointer; numConverged: ptr cint; lockedSvals: pointer;
@@ -139,7 +143,8 @@ type
     PRIMME_SVDS_stats_numGlobalSum = 391, PRIMME_SVDS_stats_volumeGlobalSum = 392,
     PRIMME_SVDS_stats_numOrthoInnerProds = 393, PRIMME_SVDS_stats_timeMatvec = 401,
     PRIMME_SVDS_stats_timePrecond = 402, PRIMME_SVDS_stats_timeOrtho = 403,
-    PRIMME_SVDS_stats_timeGlobalSum = 404
+    PRIMME_SVDS_stats_timeGlobalSum = 404,
+    PRIMME_SVDS_convTestFun = 405, PRIMME_SVDS_convtest = 406
 
 
 
