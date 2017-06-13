@@ -228,11 +228,9 @@ type
     PRIMME_stats_numGlobalSum = 471, PRIMME_stats_volumeGlobalSum = 472,
     PRIMME_stats_numOrthoInnerProds = 473, PRIMME_stats_estimateMinEVal = 481,
     PRIMME_stats_estimateMaxEVal = 482, PRIMME_stats_estimateLargestSVal = 483,
-    PRIMME_stats_maxConvTol = 484,
-    PRIMME_convtest = 510,
-    PRIMME_stats_timeMatvec = 4801,
-    PRIMME_stats_timePrecond = 4802, PRIMME_stats_timeOrtho = 4803,
-    PRIMME_stats_timeGlobalSum = 4804
+    PRIMME_stats_maxConvTol = 484, PRIMME_convtest = 510,
+    PRIMME_stats_timeMatvec = 4801, PRIMME_stats_timePrecond = 4802,
+    PRIMME_stats_timeOrtho = 4803, PRIMME_stats_timeGlobalSum = 4804
 
 
 
