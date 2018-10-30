@@ -1,8 +1,10 @@
-version     = "1.0.0"
+version     = "2.0.0"
 author      = "Xiao-Yong Jin"
 description = "Nim interface for PRIMME: PReconditioned Iterative MultiMethod Eigensolver"
 license     = "MIT"
 srcDir      = "src"
+
+requires "nim >= 0.19.0"
 
 task test, "Runs the test suite":
   withDir "test":

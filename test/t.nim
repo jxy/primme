@@ -1,6 +1,7 @@
-import primme
+import primme, primme/ccomplex
 import strutils, random, unittest
 const REPORT {.intdefine.} = 0
+type myComplex = ccomplex[float]
 template ff(x:untyped):auto = formatFloat(x,ffScientific,17)
 var CT = 1e-10                  # comparison tolerance
 proc `=~`(x,y:float):bool = abs(x-y)/max(abs(x),abs(y)) < CT
@@ -142,11 +143,11 @@ suite "Eigenvalues":
       ev[8] =~ evals[8]
       ev[9] =~ evals[9]
   test "double precision complex matrix":
-    primme.matrixMatvec = laplacianMatVec[complex[float]] # Function for matrix-vector product A*x for solving A*x=l*x
-    primme.applyPreconditioner = laplacianPrecond[complex[float]] # Optional preconditioner
+    primme.matrixMatvec = laplacianMatVec[myComplex] # Function for matrix-vector product A*x for solving A*x=l*x
+    primme.applyPreconditioner = laplacianPrecond[myComplex] # Optional preconditioner
     var
       evals = newseq[float](primme.numEvals)
-      evecs = newseq[complex[float]](primme.n * primme.numEvals)
+      evecs = newseq[myComplex](primme.n * primme.numEvals)
       rnorms = newseq[float](primme.numEvals)
     primme.runreport evals, evecs, rnorms
     check:
@@ -176,7 +177,7 @@ suite "Eigenvalues":
       ev5[3] =~ evals[3]
       ev5[4] =~ evals[4]
     # Perturb the approximate eigenvectors in evecs and use them as initial solution.
-    for i in 0..<int(primme.n*primme.numEvals): evecs[i] += random(1.0)*1e-4
+    for i in 0..<int(primme.n*primme.numEvals): evecs[i] += rand(1.0)*1e-4
     primme.initSize = primme.numEvals
     primme.runreport evals, evecs, rnorms
     check:
@@ -361,8 +362,8 @@ suite "Singular values":
       sv[2] =~ svals[2]
       sv[3] =~ svals[3]
   test "double precision complex matrix":
-    primme.matrixMatvec = lauchliMatvec[complex[float]] # Function for matrix-vector products A*x and A^t*x
-    primme.applyPreconditioner = lauchliPrecond[complex[float]] # Set preconditioner (optional)
+    primme.matrixMatvec = lauchliMatvec[myComplex] # Function for matrix-vector products A*x and A^t*x
+    primme.applyPreconditioner = lauchliPrecond[myComplex] # Set preconditioner (optional)
     block:
       # Method to solve the singular value problem and the underneath eigenvalue problem (optional)
       let ret = primme.set_method(primme_svds_hybrid, PRIMME_DYNAMIC, PRIMME_DEFAULT_MIN_TIME)
@@ -374,7 +375,7 @@ suite "Singular values":
     primme.primme.restartingParams.maxPrevRetain = 3
     var
       svals = newseq[float](primme.numSvals)
-      svecs = newseq[complex[float]]((primme.n+primme.m)*primme.numSvals)
+      svecs = newseq[myComplex]((primme.n+primme.m)*primme.numSvals)
       rnorms = newseq[float](primme.numSvals)
     primme.runreport svals, svecs, rnorms
     check:

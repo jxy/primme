@@ -17,14 +17,19 @@ DESCRIPTION
      familiarity with the C interface is recommended in using the
      Nim interface.
 
-     There are three types corresponding the C interface,
+     There are three opaque types corresponding the C interface,
 
        PRIMME_INT
        PRIMME_COMPLEX_FLOAT
        PRIMME_COMPLEX_DOUBLE
 
-     They are `int64', `complex[cfloat]', and `complex[cdouble]'
-     respectively.
+     Following the C interface, you can set PRIMME_INT_SIZE at compile
+     time, which has a default value of
+
+       const PRIMME_INT_SIZE* {.strdefine.} = "64"
+
+     However, you need to make sure that the PRIMME C library is built
+     with the same value of PRIMME_INT_SIZE.
 
      The main driver is a set of procedures all named `run'.
 
@@ -51,15 +56,17 @@ DESCRIPTION
 
      converts any pointer to type `ptr array[0..0,T]'.
 
-     A custom `complex[T]' is defined for `PRIMME_COMPLEX_FLOAT'
-     and `PRIMME_COMPLEX_DOUBLE' as `complex[cfloat]' and
-     `complex[cdouble]' respectively.
+     A custom `ccomplex[T]' is provided via the module
+     primme/ccomplex.  It is designed such that `ccomplex[cfloat]` and
+     `ccomplex[cdouble]` are binary compatible with
+     `PRIMME_COMPLEX_FLOAT' and `PRIMME_COMPLEX_DOUBLE' respectively.
 
      In addition to the above described interface, the Nim module
      also exposes all C library types, enums, and functions,
      declared via the header file, `primme.h'.
 
 SYNPOSIS
+     const PRIMME_INT_SIZE {.strdefine.}
      type PRIMME_INT
      type PRIMME_COMPLEX_FLOAT
      type PRIMME_COMPLEX_DOUBLE
@@ -69,7 +76,7 @@ SYNPOSIS
                resNorms: var openarray[cfloat]): int
      proc run*(primme: var primme_params;
                evals: var openarray[cfloat];
-	       evecs: var openarray[complex[cfloat]];
+	       evecs: var openarray[ccomplex[cfloat]];
                resNorms: var openarray[cfloat]): int
      proc run*(primme: var primme_params;
                evals: var openarray[cdouble];
@@ -77,7 +84,7 @@ SYNPOSIS
                resNorms: var openarray[cdouble]): int
      proc run*(primme: var primme_params;
                evals: var openarray[cdouble];
-	       evecs: var openarray[complex[cdouble]];
+	       evecs: var openarray[ccomplex[cdouble]];
                resNorms: var openarray[cdouble]): int
      proc run*(primme: var primme_svds_params;
                svals: var openarray[cfloat];
@@ -85,7 +92,7 @@ SYNPOSIS
                resNorms: var openarray[cfloat]): int
      proc run*(primme: var primme_svds_params;
                svals: var openarray[cfloat];
-	       svecs: var openarray[complex[cfloat]];
+	       svecs: var openarray[ccomplex[cfloat]];
                resNorms: var openarray[cfloat]): int
      proc run*(primme: var primme_svds_params;
                svals: var openarray[cdouble];
@@ -93,7 +100,7 @@ SYNPOSIS
                resNorms: var openarray[cdouble]): int
      proc run*(primme: var primme_svds_params;
                svals: var openarray[cdouble];
-	       svecs: var openarray[complex[cdouble]];
+	       svecs: var openarray[ccomplex[cdouble]];
                resNorms: var openarray[cdouble]): int
      proc primme_initialize*:primme_params
      proc primme_svds_initialize*:primme_svds_params
@@ -107,7 +114,7 @@ SYNPOSIS
      template display_params*(primme: primme_svds_params)
      proc free*(primme: var primme_params)
      proc free*(primme: var primme_svds_params)
-     template asarray*[T](p:pointer):auto
+     template asarray*[T](p:pointer):untyped
 
 BUILDING
      To compile and link against PRIMME library, Nim needs to
