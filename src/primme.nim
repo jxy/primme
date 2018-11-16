@@ -101,7 +101,7 @@ proc free*(primme: var primme_params) = primme.addr.primme_free
 proc free*(primme: var primme_svds_params) = primme.addr.primme_svds_free
 
 template asarray*[T](p:pointer):untyped =
-  type A{.unchecked.} = array[0, T]
+  type A = Uncheckedarray[T]
   cast[ptr A](p)
 
 export primme_eigs, primme_svds
