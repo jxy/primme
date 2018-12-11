@@ -51,6 +51,10 @@ proc run*[I](primme: var primme_params;
           resNorms: var openarray[cfloat]): int =
   cprimme(evals[0].addr, cast[ptr PRIMME_COMPLEX_FLOAT](evecs[0].addr), resNorms[0].addr, primme.addr)
 proc run*(primme: var primme_params;
+          evals: var openarray[cfloat]; evecs: var UncheckedArray[complex_float];
+          resNorms: var openarray[cfloat]): int =
+  cprimme(evals[0].addr, cast[ptr PRIMME_COMPLEX_FLOAT](evecs[0].addr), resNorms[0].addr, primme.addr)
+proc run*(primme: var primme_params;
           evals: var openarray[cdouble]; evecs: var openarray[cdouble];
           resNorms: var openarray[cdouble]): int =
   dprimme(evals[0].addr, evecs[0].addr, resNorms[0].addr, primme.addr)
@@ -60,6 +64,10 @@ proc run*(primme: var primme_params;
   zprimme(evals[0].addr, cast[ptr PRIMME_COMPLEX_DOUBLE](evecs[0].addr), resNorms[0].addr, primme.addr)
 proc run*[I](primme: var primme_params;
           evals: var openarray[cdouble]; evecs: var array[I,complex_double];
+          resNorms: var openarray[cdouble]): int =
+  zprimme(evals[0].addr, cast[ptr PRIMME_COMPLEX_DOUBLE](evecs[0].addr), resNorms[0].addr, primme.addr)
+proc run*(primme: var primme_params;
+          evals: var openarray[cdouble]; evecs: var UncheckedArray[complex_double];
           resNorms: var openarray[cdouble]): int =
   zprimme(evals[0].addr, cast[ptr PRIMME_COMPLEX_DOUBLE](evecs[0].addr), resNorms[0].addr, primme.addr)
 proc run*(primme: var primme_svds_params;
@@ -75,6 +83,10 @@ proc run*[I](primme: var primme_svds_params;
           resNorms: var openarray[cfloat]): int =
   cprimme_svds(svals[0].addr, cast[ptr PRIMME_COMPLEX_FLOAT](svecs[0].addr), resNorms[0].addr, primme.addr)
 proc run*(primme: var primme_svds_params;
+          svals: var openarray[cfloat]; svecs: var UncheckedArray[complex_float];
+          resNorms: var openarray[cfloat]): int =
+  cprimme_svds(svals[0].addr, cast[ptr PRIMME_COMPLEX_FLOAT](svecs[0].addr), resNorms[0].addr, primme.addr)
+proc run*(primme: var primme_svds_params;
           svals: var openarray[cdouble]; svecs: var openarray[cdouble];
           resNorms: var openarray[cdouble]): int =
   dprimme_svds(svals[0].addr, svecs[0].addr, resNorms[0].addr, primme.addr)
@@ -84,6 +96,10 @@ proc run*(primme: var primme_svds_params;
   zprimme_svds(svals[0].addr, cast[ptr PRIMME_COMPLEX_DOUBLE](svecs[0].addr), resNorms[0].addr, primme.addr)
 proc run*[I](primme: var primme_svds_params;
           svals: var openarray[cdouble]; svecs: var array[I,complex_double];
+          resNorms: var openarray[cdouble]): int =
+  zprimme_svds(svals[0].addr, cast[ptr PRIMME_COMPLEX_DOUBLE](svecs[0].addr), resNorms[0].addr, primme.addr)
+proc run*(primme: var primme_svds_params;
+          svals: var openarray[cdouble]; svecs: var UncheckedArray[complex_double];
           resNorms: var openarray[cdouble]): int =
   zprimme_svds(svals[0].addr, cast[ptr PRIMME_COMPLEX_DOUBLE](svecs[0].addr), resNorms[0].addr, primme.addr)
 proc primme_initialize*:primme_params =
