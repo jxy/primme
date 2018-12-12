@@ -30,7 +30,7 @@ const
 type PRIMME_COMPLEX_FLOAT*{.importc: "PRIMME_COMPLEX_FLOAT", header: "primme.h".} = object
 type PRIMME_COMPLEX_DOUBLE*{.importc: "PRIMME_COMPLEX_DOUBLE", header: "primme.h".} = object
 
-import primme/ccomplex
+import primme/complex
 
 type
   complex_float = PRIMME_COMPLEX_FLOAT | ccomplex[cfloat] | ccomplex[float32]

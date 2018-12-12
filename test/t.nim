@@ -1,4 +1,4 @@
-import primme, primme/ccomplex
+import primme, primme/complex
 import strutils, random, unittest
 const REPORT {.intdefine.} = 0
 type myComplex = ccomplex[float]
