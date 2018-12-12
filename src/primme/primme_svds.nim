@@ -59,7 +59,7 @@ type
     timeOrtho* {.importc: "timeOrtho".}: cdouble ##  time expend by ortho
     timeGlobalSum* {.importc: "timeGlobalSum".}: cdouble ##  time expend by globalSumReal
 
-  primme_svds_params* {.bycopy, importc: "primme_svds_params", header: "primme.h".} = object
+  primme_svds_params* {.importc: "primme_svds_params", header: "primme.h".} = object
     primme* {.importc: "primme".}: primme_params ## *** Low interface: configuration for the eigensolver
     ##  Keep it as first field to access primme_svds_params from
     ##                              primme_params

@@ -124,7 +124,7 @@ type
 ## --------------------------------------------------------------------------
 
 type
-  primme_params* {.bycopy, importc: "primme_params", header: "primme.h".} = object
+  primme_params* {.importc: "primme_params", header: "primme.h".} = object
     n* {.importc: "n".}: PRIMME_INT ##  The user must input at least the following two arguments
     matrixMatvec* {.importc: "matrixMatvec".}: proc (x: pointer; ldx: ptr PRIMME_INT;
         y: pointer; ldy: ptr PRIMME_INT; blockSize: ptr cint; primme: ptr primme_params;
