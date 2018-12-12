@@ -1,4 +1,4 @@
-version     = "2.1.1"
+version     = "3.0.0"
 author      = "Xiao-Yong Jin"
 description = "Nim interface for PRIMME: PReconditioned Iterative MultiMethod Eigensolver"
 license     = "MIT"

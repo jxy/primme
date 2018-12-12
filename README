@@ -54,10 +54,10 @@ DESCRIPTION
 
        asarray[T](p)
 
-     converts any pointer to type `ptr array[0..0,T]'.
+     converts any pointer to type `ptr UncheckedArray[T]'.
 
      A custom `ccomplex[T]' is provided via the module
-     primme/ccomplex.  It is designed such that `ccomplex[cfloat]` and
+     primme/complex.  It is designed such that `ccomplex[cfloat]` and
      `ccomplex[cdouble]` are binary compatible with
      `PRIMME_COMPLEX_FLOAT' and `PRIMME_COMPLEX_DOUBLE' respectively.
 
